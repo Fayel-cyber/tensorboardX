@@ -2,7 +2,6 @@ dist: xenial
 language: python
 python:
   # We don't actually use the Travis Python, but this keeps it organized.
-  - "3.7"
   - "3.8"
 
 env:
@@ -10,6 +9,11 @@ env:
   - PYTORCH_VER="--pre torch torchvision -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html"
 
 matrix:
+  include:
+    - env: PYTORCH_VER="torch"
+      arch: amd64
+    - env: PYTORCH_VER="torch"
+      arch: arm64
   allow_failures:
     - env: PYTORCH_VER="--pre torch torchvision -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html"
 
@@ -22,9 +26,12 @@ install:
   # version is the same.
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
       wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    fi  
+  - if [ "${TRAVIS_CPU_ARCH}" == "arm64" ]; then
+        wget https://github.com/conda-forge/miniforge/releases/download/4.8.2-1/Miniforge3-4.8.2-1-Linux-aarch64.sh -O miniconda.sh;    
     else
       wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
+    fi    
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - export BOTO_CONFIG=/dev/null  # https://github.com/travis-ci/travis-ci/issues/7940
@@ -49,6 +56,8 @@ install:
   - pip install matplotlib -q
   - pip install requests -q
   - pip install codecov
+  - pip install cython protobuf numpy
+  - sudo apt-get install libprotobuf-dev protobuf-compiler
   - pip install onnx
   - pip install boto3
   - pip install moto
@@ -67,6 +76,7 @@ script:
   - visdom &
   - sleep 5
   - python -c "import visdom; v = visdom.Visdom()"
+  - python -m pip install --upgrade protobuf
   - py.test --cov=tensorboardX tests/
   - python examples/demo.py  # mnist download is broken
   - python examples/demo_graph.py
