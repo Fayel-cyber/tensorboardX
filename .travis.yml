@@ -10,9 +10,9 @@ env:
 
 matrix:
   include:
-    - env: PYTORCH_VER="torch"
+    - env: PYTORCH_VER="--pre torch torchvision -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html"
       arch: amd64
-    - env: PYTORCH_VER="torch"
+    - env: PYTORCH_VER="--pre torch torchvision -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html"
       arch: arm64
   allow_failures:
     - env: PYTORCH_VER="--pre torch torchvision -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html"
