@@ -5,8 +5,8 @@ python:
   - "3.8"
 
 env:
-  - PYTORCH_VER="torch"
-  - PYTORCH_VER="--pre torch torchvision -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html"
+  #- PYTORCH_VER="torch"
+  #- PYTORCH_VER="--pre torch torchvision -f https://download.pytorch.org/whl/nightly/cpu/torch_nightly.html"
 
 matrix:
   include:
@@ -26,8 +26,7 @@ install:
   # version is the same.
   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
       wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi  
-  - if [ "${TRAVIS_CPU_ARCH}" == "arm64" ]; then
+    elif [ "${TRAVIS_CPU_ARCH}" == "arm64" ]; then
         wget https://github.com/conda-forge/miniforge/releases/download/4.8.2-1/Miniforge3-4.8.2-1-Linux-aarch64.sh -O miniconda.sh;    
     else
       wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -56,8 +55,8 @@ install:
   - pip install matplotlib -q
   - pip install requests -q
   - pip install codecov
-  - pip install cython protobuf numpy
-  - sudo apt-get install libprotobuf-dev protobuf-compiler
+  #- pip install cython protobuf numpy
+  #- sudo apt-get install libprotobuf-dev protobuf-compiler
   - pip install onnx
   - pip install boto3
   - pip install moto
